@@ -4,6 +4,7 @@ import ActionOverlay from './components/ActionOverlay';
 import ScreenshotCard from './components/ScreenshotCard';
 import DetailView from './components/DetailView';
 import { ScreenshotData } from './types';
+import { ClipboardMonitor } from './utils/clipboard';
 
 const App: React.FC = () => {
   const [screenshots, setScreenshots] = useState<ScreenshotData[]>([]);
@@ -11,8 +12,10 @@ const App: React.FC = () => {
   const [selectedScreenshot, setSelectedScreenshot] = useState<ScreenshotData | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [activeAlarmItem, setActiveAlarmItem] = useState<ScreenshotData | null>(null);
+  const [clipboardMonitorEnabled, setClipboardMonitorEnabled] = useState(false);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const clipboardMonitorRef = useRef<ClipboardMonitor>(new ClipboardMonitor());
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('screenmind_theme');
@@ -87,6 +90,23 @@ const App: React.FC = () => {
     if ("Notification" in window && Notification.permission !== 'granted') {
       Notification.requestPermission();
     }
+    
+    // Register service worker for PWA
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').then((registration) => {
+        console.log('Service Worker registered:', registration);
+      }).catch((error) => {
+        console.log('Service Worker registration failed:', error);
+      });
+
+      // Listen for shared images from service worker
+      navigator.serviceWorker.addEventListener('message', (event) => {
+        if (event.data && event.data.type === 'SHARED_IMAGE') {
+          setCurrentImage(event.data.imageData);
+        }
+      });
+    }
+    
     const interval = setInterval(() => {
       const now = Date.now();
       const overdueItem = screenshots.find(item => 
@@ -128,6 +148,29 @@ const App: React.FC = () => {
     if (selectedScreenshot?.id === updatedItem.id) setSelectedScreenshot(updatedItem);
   };
 
+  const toggleClipboardMonitor = async () => {
+    if (!clipboardMonitorEnabled) {
+      // Start monitoring
+      await clipboardMonitorRef.current.startMonitoring((imageData) => {
+        setCurrentImage(imageData);
+      });
+      setClipboardMonitorEnabled(true);
+    } else {
+      // Stop monitoring
+      clipboardMonitorRef.current.stopMonitoring();
+      setClipboardMonitorEnabled(false);
+    }
+  };
+
+  const pasteFromClipboard = async () => {
+    const imageData = await clipboardMonitorRef.current.checkNow();
+    if (imageData) {
+      setCurrentImage(imageData);
+    } else {
+      alert('No image found in clipboard. Take a screenshot first!');
+    }
+  };
+
   const sortedScreenshots = [...screenshots].sort((a, b) => b.timestamp - a.timestamp);
 
   return (
@@ -145,12 +188,25 @@ const App: React.FC = () => {
              <div className="h-1 bg-neo-primary w-full mt-0.5"></div>
            </div>
         </div>
-        <button 
-          onClick={toggleTheme}
-          className="w-10 h-10 border-2 border-black dark:border-white bg-neo-yellow text-black hover:shadow-neo dark:hover:shadow-neo-white hover:-translate-y-0.5 hover:-translate-x-0.5 transition-all flex items-center justify-center"
-        >
-          {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-        </button>
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={toggleClipboardMonitor}
+            className={`px-3 py-2 border-2 border-black dark:border-white font-bold text-xs uppercase transition-all ${
+              clipboardMonitorEnabled 
+                ? 'bg-neo-secondary text-white shadow-neo-sm' 
+                : 'bg-white dark:bg-gray-900 hover:shadow-neo dark:hover:shadow-neo-white'
+            }`}
+            title={clipboardMonitorEnabled ? 'Auto-detect ON' : 'Auto-detect OFF'}
+          >
+            {clipboardMonitorEnabled ? '● AUTO' : 'AUTO'}
+          </button>
+          <button 
+            onClick={toggleTheme}
+            className="w-10 h-10 border-2 border-black dark:border-white bg-neo-yellow text-black hover:shadow-neo dark:hover:shadow-neo-white hover:-translate-y-0.5 hover:-translate-x-0.5 transition-all flex items-center justify-center"
+          >
+            {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          </button>
+        </div>
       </header>
 
       {/* Main Content */}
@@ -190,7 +246,14 @@ const App: React.FC = () => {
       </main>
 
       {/* Brutalist FAB */}
-      <div className="fixed bottom-8 right-6 z-20">
+      <div className="fixed bottom-8 right-6 z-20 flex flex-col gap-3">
+        <button 
+          onClick={pasteFromClipboard}
+          className="w-14 h-14 bg-neo-secondary text-white border-2 border-black dark:border-white shadow-neo dark:shadow-neo-white hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all flex items-center justify-center group"
+          title="Paste from clipboard"
+        >
+          <ImageIcon className="w-6 h-6" />
+        </button>
         <button 
           onClick={() => fileInputRef.current?.click()}
           className="w-16 h-16 bg-neo-primary border-2 border-black shadow-neo hover:shadow-neo-lg hover:-translate-y-1 hover:-translate-x-1 transition-all active:translate-x-0 active:translate-y-0 active:shadow-none flex items-center justify-center text-white"
