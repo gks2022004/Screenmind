@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Plus, ImageIcon, Sun, Moon, Bell, X, AlertCircle } from './components/Icons';
+import { Plus, ImageIcon, Sun, Moon, Bell, X, AlertCircle, ScreenmindLogo } from './components/Icons';
 import ActionOverlay from './components/ActionOverlay';
 import ScreenshotCard from './components/ScreenshotCard';
 import DetailView from './components/DetailView';
@@ -136,8 +136,10 @@ const App: React.FC = () => {
 
       {/* Neo-Brutalist Header */}
       <header className="sticky top-0 z-30 bg-white dark:bg-gray-900 border-b-2 border-black dark:border-white px-5 py-4 flex justify-between items-center">
-        <div className="flex items-center gap-2">
-           <div className="w-8 h-8 bg-black dark:bg-white text-white dark:text-black flex items-center justify-center font-black text-lg border-2 border-transparent">S</div>
+        <div className="flex items-center gap-3">
+           <div className="w-10 h-10 bg-black dark:bg-white text-white dark:text-black flex items-center justify-center border-2 border-transparent shadow-neo-sm">
+             <ScreenmindLogo className="w-6 h-6" />
+           </div>
            <div>
              <h1 className="text-xl font-display font-black uppercase tracking-tighter leading-none dark:text-white">ScreenMind</h1>
              <div className="h-1 bg-neo-primary w-full mt-0.5"></div>
