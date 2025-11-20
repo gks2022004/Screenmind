@@ -35,8 +35,8 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
   
-  // Handle share target POST requests to /share-target
-  if (event.request.method === 'POST' && url.pathname === '/share-target') {
+  // Handle share target POST requests
+  if (event.request.method === 'POST' && url.pathname.includes('index.html')) {
     event.respondWith(handleShareTarget(event.request));
     return;
   }
