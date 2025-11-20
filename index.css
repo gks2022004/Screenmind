@@ -1,32 +1,41 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-@layer base {
-  body {
-    font-family: 'Inter', sans-serif;
-  }
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Space Grotesk', sans-serif;
-  }
+@config "./tailwind.config.js";
+
+body {
+  font-family: 'Inter', sans-serif;
 }
 
-@layer utilities {
-  /* Dot Pattern Background */
-  .bg-dots {
-    background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
-    background-size: 20px 20px;
-  }
-  .dark .bg-dots {
-    background-image: radial-gradient(#334155 1px, transparent 1px);
-  }
-  
-  /* Scrollbar hiding */
-  .no-scrollbar::-webkit-scrollbar { 
-    display: none; 
-  }
-  .no-scrollbar { 
-    -ms-overflow-style: none; 
-    scrollbar-width: none; 
-  }
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+@keyframes slideUp {
+  0% { transform: translateY(100%); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes pop {
+  0% { transform: scale(0.9); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Dot Pattern Background */
+.bg-dots {
+  background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.dark .bg-dots {
+  background-image: radial-gradient(#334155 1px, transparent 1px);
+}
+
+/* Scrollbar hiding */
+.no-scrollbar::-webkit-scrollbar { 
+  display: none; 
+}
+
+.no-scrollbar { 
+  -ms-overflow-style: none; 
+  scrollbar-width: none; 
 }
