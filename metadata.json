@@ -1,5 +1,5 @@
 {
-  "name": "Copy of ScreenMind",
+  "name": "ScreenMind",
   "description": "A smart screenshot assistant that helps you organize, annotate, and set reminders for your screenshots using AI.",
   "requestFramePermissions": [
     "camera",
