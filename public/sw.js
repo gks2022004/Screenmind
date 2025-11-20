@@ -39,46 +39,62 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // For GET requests, use cache-first strategy
   event.respondWith(
     caches.match(event.request)
       .then((response) => response || fetch(event.request))
+      .catch(() => fetch(event.request))
   );
 });
 
 // Handle shared images
 async function handleShareTarget(request) {
-  const formData = await request.formData();
-  const image = formData.get('image');
-  const title = formData.get('title') || 'Shared Screenshot';
-  const text = formData.get('text') || '';
+  try {
+    const formData = await request.formData();
+    const image = formData.get('image');
+    const title = formData.get('title') || 'Shared Screenshot';
+    const text = formData.get('text') || '';
 
-  if (image) {
-    // Store the shared image data
-    const imageData = await image.arrayBuffer();
-    const blob = new Blob([imageData], { type: image.type });
-    
-    // Send message to all clients to process the shared image
-    const clients = await self.clients.matchAll({ includeUncontrolled: true, type: 'window' });
-    
-    if (clients.length > 0) {
-      // Convert blob to base64 for messaging
+    if (image) {
+      // Convert to base64
+      const arrayBuffer = await image.arrayBuffer();
+      const blob = new Blob([arrayBuffer], { type: image.type });
       const reader = new FileReader();
-      reader.readAsDataURL(blob);
       
-      reader.onloadend = () => {
-        clients.forEach(client => {
-          client.postMessage({
-            type: 'SHARED_IMAGE',
-            imageData: reader.result,
-            title: title,
-            text: text
-          });
+      const base64Promise = new Promise((resolve) => {
+        reader.onloadend = () => {
+          resolve(reader.result);
+        };
+        reader.readAsDataURL(blob);
+      });
+
+      const imageData = await base64Promise;
+      
+      // Store in cache/indexedDB for retrieval
+      const cache = await caches.open(CACHE_NAME);
+      await cache.put(
+        '/shared-image-data',
+        new Response(JSON.stringify({ imageData, title, text }), {
+          headers: { 'Content-Type': 'application/json' }
+        })
+      );
+
+      // Send message to all clients
+      const clients = await self.clients.matchAll({ includeUncontrolled: true, type: 'window' });
+      clients.forEach(client => {
+        client.postMessage({
+          type: 'SHARED_IMAGE',
+          imageData: imageData,
+          title: title,
+          text: text
         });
-      };
+      });
     }
+  } catch (error) {
+    console.error('Error handling shared image:', error);
   }
 
-  // Redirect to the app
+  // Always redirect to the app (return 303 See Other)
   return Response.redirect('/', 303);
 }
 
