@@ -133,6 +133,21 @@ const App: React.FC = () => {
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
+  const openCamera = () => {
+    // On mobile, this will open camera or gallery
+    if (fileInputRef.current) {
+      // Remove capture attribute to allow gallery selection on some devices
+      fileInputRef.current.removeAttribute('capture');
+      fileInputRef.current.click();
+      // Re-add capture for next time
+      setTimeout(() => {
+        if (fileInputRef.current) {
+          fileInputRef.current.setAttribute('capture', 'environment');
+        }
+      }, 100);
+    }
+  };
+
   const handleSaveCapture = (data: ScreenshotData) => {
     setScreenshots(prev => [data, ...prev]);
     setCurrentImage(null);
@@ -175,7 +190,14 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen pb-24 relative bg-dots transition-colors duration-300 font-sans">
-      <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleFileChange} />
+      <input 
+        type="file" 
+        accept="image/*" 
+        capture="environment"
+        className="hidden" 
+        ref={fileInputRef} 
+        onChange={handleFileChange} 
+      />
 
       {/* Neo-Brutalist Header */}
       <header className="sticky top-0 z-30 bg-white dark:bg-gray-900 border-b-2 border-black dark:border-white px-5 py-4 flex justify-between items-center">
@@ -211,7 +233,18 @@ const App: React.FC = () => {
 
       {/* Main Content */}
       <main className="p-5 max-w-xl mx-auto space-y-6">
-        {sortedScreenshots.length === 0 ? (
+        {/* PWA Install Prompt for Mobile */}
+        {!window.matchMedia('(display-mode: standalone)').matches && (
+          <div className="bg-neo-secondary text-white border-2 border-black p-4 shadow-neo-sm mb-4">
+            <p className="text-sm font-bold mb-2">📱 Install ScreenMind for easy screenshot sharing!</p>
+            <p className="text-xs opacity-90">
+              On mobile: Tap <strong>Share → Add to Home Screen</strong>. 
+              Then you can share screenshots directly to ScreenMind!
+            </p>
+          </div>
+        )}
+        
+        {screenshots.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-[50vh] text-center border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg mt-10">
             <div className="w-20 h-20 bg-white dark:bg-gray-800 border-2 border-black dark:border-white shadow-neo flex items-center justify-center mb-6 rotate-3">
               <ImageIcon className="w-8 h-8" />
@@ -238,7 +271,8 @@ const App: React.FC = () => {
                 key={item.id} 
                 item={item} 
                 onDelete={handleDelete}
-                onClick={setSelectedScreenshot} 
+                onClick={setSelectedScreenshot}
+                onUpdate={handleUpdateScreenshot}
               />
             ))}
           </>
@@ -247,9 +281,18 @@ const App: React.FC = () => {
 
       {/* Brutalist FAB */}
       <div className="fixed bottom-8 right-6 z-20 flex flex-col gap-3">
+        {/* Camera/Screenshot button - visible on mobile */}
+        <button 
+          onClick={openCamera}
+          className="w-14 h-14 bg-neo-yellow text-black border-2 border-black dark:border-white shadow-neo dark:shadow-neo-white hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all flex items-center justify-center md:hidden"
+          title="Take/Upload Screenshot"
+        >
+          <ImageIcon className="w-6 h-6" />
+        </button>
+        {/* Paste button - visible on desktop */}
         <button 
           onClick={pasteFromClipboard}
-          className="w-14 h-14 bg-neo-secondary text-white border-2 border-black dark:border-white shadow-neo dark:shadow-neo-white hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all flex items-center justify-center group"
+          className="hidden md:flex w-14 h-14 bg-neo-secondary text-white border-2 border-black dark:border-white shadow-neo dark:shadow-neo-white hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all items-center justify-center"
           title="Paste from clipboard"
         >
           <ImageIcon className="w-6 h-6" />

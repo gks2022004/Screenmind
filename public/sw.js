@@ -34,7 +34,7 @@ self.addEventListener('activate', (event) => {
 // Fetch event - serve from cache, fallback to network
 self.addEventListener('fetch', (event) => {
   // Handle share target POST requests
-  if (event.request.url.endsWith('/share') && event.request.method === 'POST') {
+  if (event.request.method === 'POST') {
     event.respondWith(handleShareTarget(event.request));
     return;
   }

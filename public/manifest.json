@@ -3,6 +3,7 @@
   "short_name": "ScreenMind",
   "description": "A smart screenshot assistant that helps you organize, annotate, and set reminders for your screenshots using AI.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#121212",
   "theme_color": "#8b5cf6",
@@ -15,18 +16,18 @@
       "purpose": "any maskable"
     },
     {
-      "src": "/icon-192.png",
+      "src": "/favicon.svg",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/svg+xml"
     },
     {
-      "src": "/icon-512.png",
+      "src": "/favicon.svg",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/svg+xml"
     }
   ],
   "share_target": {
-    "action": "/share",
+    "action": "/",
     "method": "POST",
     "enctype": "multipart/form-data",
     "params": {
@@ -35,7 +36,7 @@
       "files": [
         {
           "name": "image",
-          "accept": ["image/*"]
+          "accept": ["image/*", "image/png", "image/jpeg", "image/jpg", "image/webp"]
         }
       ]
     }

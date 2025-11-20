@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import { ScreenshotData } from '../types';
-import { Clock, StickyNote, Play, Pause, Share2, Trash2 } from './Icons';
+import { Clock, StickyNote, Play, Pause, Share2, Trash2, Edit3, Check, X } from './Icons';
 
 interface ScreenshotCardProps {
   item: ScreenshotData;
   onDelete: (id: string) => void;
   onClick: (item: ScreenshotData) => void;
+  onUpdate: (data: ScreenshotData) => void;
 }
 
-const ScreenshotCard: React.FC<ScreenshotCardProps> = ({ item, onDelete, onClick }) => {
+const ScreenshotCard: React.FC<ScreenshotCardProps> = ({ item, onDelete, onClick, onUpdate }) => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [editedTitle, setEditedTitle] = useState(item.title);
   const audioRef = React.useRef<HTMLAudioElement | null>(null);
 
   const handlePlayAudio = (e: React.MouseEvent) => {
@@ -45,6 +48,25 @@ const ScreenshotCard: React.FC<ScreenshotCardProps> = ({ item, onDelete, onClick
     }
   };
 
+  const handleEditTitle = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsEditingTitle(true);
+  };
+
+  const handleSaveTitle = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (editedTitle.trim()) {
+      onUpdate({ ...item, title: editedTitle.trim() });
+      setIsEditingTitle(false);
+    }
+  };
+
+  const handleCancelEdit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setEditedTitle(item.title);
+    setIsEditingTitle(false);
+  };
+
   const formattedDate = new Date(item.timestamp).toLocaleDateString(undefined, {
     month: 'short', day: 'numeric',
   });
@@ -71,10 +93,41 @@ const ScreenshotCard: React.FC<ScreenshotCardProps> = ({ item, onDelete, onClick
       <div className="flex-1 min-w-0 flex flex-col justify-between h-24">
         <div>
           <div className="flex justify-between items-start mb-1">
-            <h3 className="font-display font-bold text-lg leading-tight truncate pr-2 text-black dark:text-white">
-              {item.title || 'Untitled'}
-            </h3>
-            <span className="inline-block px-1.5 py-0.5 border border-black dark:border-white text-[10px] font-bold uppercase bg-neo-yellow text-black">
+            {isEditingTitle ? (
+              <div className="flex items-center gap-1 flex-1 mr-2" onClick={(e) => e.stopPropagation()}>
+                <input
+                  type="text"
+                  value={editedTitle}
+                  onChange={(e) => setEditedTitle(e.target.value)}
+                  className="flex-1 px-2 py-0.5 bg-white dark:bg-gray-800 border border-black dark:border-white font-display font-bold text-sm"
+                  autoFocus
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleSaveTitle(e as any);
+                    if (e.key === 'Escape') handleCancelEdit(e as any);
+                  }}
+                />
+                <button onClick={handleSaveTitle} className="p-0.5 bg-neo-secondary text-white border border-black">
+                  <Check className="w-3 h-3" />
+                </button>
+                <button onClick={handleCancelEdit} className="p-0.5 bg-gray-300 border border-black">
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-1 flex-1 group/title">
+                <h3 className="font-display font-bold text-lg leading-tight truncate pr-2 text-black dark:text-white">
+                  {item.title || 'Untitled'}
+                </h3>
+                <button 
+                  onClick={handleEditTitle}
+                  className="opacity-0 group-hover/title:opacity-100 p-0.5 hover:bg-gray-100 dark:hover:bg-gray-800 transition-opacity"
+                  title="Edit title"
+                >
+                  <Edit3 className="w-3 h-3" />
+                </button>
+              </div>
+            )}
+            <span className="inline-block px-1.5 py-0.5 border border-black dark:border-white text-[10px] font-bold uppercase bg-neo-yellow text-black shrink-0">
               {formattedDate}
             </span>
           </div>
