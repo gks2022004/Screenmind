@@ -33,8 +33,10 @@ self.addEventListener('activate', (event) => {
 
 // Fetch event - serve from cache, fallback to network
 self.addEventListener('fetch', (event) => {
-  // Handle share target POST requests
-  if (event.request.method === 'POST') {
+  const url = new URL(event.request.url);
+  
+  // Handle share target POST requests to /share-target
+  if (event.request.method === 'POST' && url.pathname === '/share-target') {
     event.respondWith(handleShareTarget(event.request));
     return;
   }

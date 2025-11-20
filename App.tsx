@@ -96,6 +96,9 @@ const App: React.FC = () => {
       navigator.serviceWorker.register('/sw.js').then((registration) => {
         console.log('Service Worker registered:', registration);
         
+        // Force update to get latest service worker
+        registration.update();
+        
         // Check for shared image data on load
         caches.open('screenmind-v1').then((cache) => {
           cache.match('/shared-image-data').then((response) => {
