@@ -45,7 +45,8 @@ const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const toSave = screenshots.slice(0, 20); 
+    const toSave = screenshots.slice(0, 20);
+    console.log('Saving to localStorage:', toSave);
     localStorage.setItem('screenmind_data', JSON.stringify(toSave));
   }, [screenshots]);
 
@@ -167,7 +168,12 @@ const App: React.FC = () => {
   };
 
   const handleSaveCapture = (data: ScreenshotData) => {
-    setScreenshots(prev => [data, ...prev]);
+    console.log('Saving screenshot:', data);
+    setScreenshots(prev => {
+      const updated = [data, ...prev];
+      console.log('Updated screenshots:', updated);
+      return updated;
+    });
     setCurrentImage(null);
   };
 

@@ -120,7 +120,7 @@ const ScreenshotCard: React.FC<ScreenshotCardProps> = ({ item, onDelete, onClick
                 </h3>
                 <button 
                   onClick={handleEditTitle}
-                  className="opacity-0 group-hover/title:opacity-100 p-0.5 hover:bg-gray-100 dark:hover:bg-gray-800 transition-opacity"
+                  className="opacity-100 md:opacity-0 md:group-hover/title:opacity-100 p-0.5 hover:bg-gray-100 dark:hover:bg-gray-800 transition-opacity flex-shrink-0"
                   title="Edit title"
                 >
                   <Edit3 className="w-3 h-3" />

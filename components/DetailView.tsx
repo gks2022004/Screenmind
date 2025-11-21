@@ -12,6 +12,10 @@ interface DetailViewProps {
 const DetailView: React.FC<DetailViewProps> = ({ item, onClose, onDelete, onUpdate }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   
+  // Title State
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [titleText, setTitleText] = useState(item.title);
+  
   // Note State
   const [isEditingNote, setIsEditingNote] = useState(false);
   const [noteText, setNoteText] = useState(item.note || '');
@@ -32,7 +36,9 @@ const DetailView: React.FC<DetailViewProps> = ({ item, onClose, onDelete, onUpda
   const dateInputRef = useRef<HTMLInputElement>(null); // Ref for date input
 
   useEffect(() => {
+    setTitleText(item.title);
     setNoteText(item.note || '');
+    setIsEditingTitle(false);
     setIsEditingNote(false);
     setIsEditingReminder(false);
     setIsDeletingAudio(false);
@@ -87,6 +93,20 @@ const DetailView: React.FC<DetailViewProps> = ({ item, onClose, onDelete, onUpda
     const now = new Date();
     now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
     return now.toISOString().slice(0, 16);
+  };
+
+  // --- TITLE LOGIC ---
+
+  const saveTitle = () => {
+    if (titleText.trim()) {
+      onUpdate({ ...item, title: titleText.trim() });
+      setIsEditingTitle(false);
+    }
+  };
+
+  const cancelTitleEdit = () => {
+    setTitleText(item.title);
+    setIsEditingTitle(false);
   };
 
   // --- NOTE LOGIC ---
@@ -227,9 +247,40 @@ const DetailView: React.FC<DetailViewProps> = ({ item, onClose, onDelete, onUpda
         
         {/* Title Section */}
         <div className="bg-white dark:bg-gray-900 border-2 border-black dark:border-white p-6 shadow-neo dark:shadow-neo-white relative">
-           <h1 className="font-display text-3xl font-black uppercase leading-none mb-2 break-words">
-             {item.title}
-           </h1>
+           {isEditingTitle ? (
+             <div className="flex items-center gap-2 mb-2">
+               <input
+                 type="text"
+                 value={titleText}
+                 onChange={(e) => setTitleText(e.target.value)}
+                 className="flex-1 px-3 py-2 bg-white dark:bg-gray-800 border-2 border-black dark:border-white font-display font-black uppercase text-2xl focus:outline-none focus:shadow-neo dark:focus:shadow-neo-white"
+                 autoFocus
+                 onKeyDown={(e) => {
+                   if (e.key === 'Enter') saveTitle();
+                   if (e.key === 'Escape') cancelTitleEdit();
+                 }}
+               />
+               <button onClick={saveTitle} className="p-2 bg-neo-secondary text-white border-2 border-black hover:bg-green-600">
+                 <Check className="w-5 h-5" />
+               </button>
+               <button onClick={cancelTitleEdit} className="p-2 bg-gray-300 border-2 border-black hover:bg-gray-400">
+                 <X className="w-5 h-5" />
+               </button>
+             </div>
+           ) : (
+             <div className="flex items-center gap-2 mb-2">
+               <h1 className="font-display text-3xl font-black uppercase leading-none break-words flex-1">
+                 {item.title}
+               </h1>
+               <button 
+                 onClick={() => setIsEditingTitle(true)}
+                 className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors flex-shrink-0"
+                 title="Edit title"
+               >
+                 <Edit3 className="w-5 h-5" />
+               </button>
+             </div>
+           )}
            
            <div className="flex flex-wrap items-center gap-2 mb-4">
              <div className="inline-flex items-center gap-2 px-2 py-1 bg-black text-white dark:bg-white dark:text-black text-xs font-mono">

@@ -79,9 +79,20 @@ const ActionOverlay: React.FC<ActionOverlayProps> = ({ initialImage, onClose, on
   };
 
   const handleSave = async () => {
+    console.log('ActionOverlay - Starting save...');
+    console.log('Title:', title);
+    console.log('Note:', note);
+    console.log('Reminder:', reminder);
+    console.log('Audio blob:', audioBlob);
+    
     let finalAudioUrl = undefined;
     if (audioBlob) {
-      try { finalAudioUrl = await blobToBase64(audioBlob); } catch (e) { console.error(e); }
+      try { 
+        finalAudioUrl = await blobToBase64(audioBlob);
+        console.log('Audio converted to base64');
+      } catch (e) { 
+        console.error('Error converting audio:', e); 
+      }
     }
 
     const newScreenshot: ScreenshotData = {
@@ -95,6 +106,8 @@ const ActionOverlay: React.FC<ActionOverlayProps> = ({ initialImage, onClose, on
       reminderTime: reminder ? new Date(reminder).getTime() : undefined,
       reminderAcknowledged: false,
     };
+    
+    console.log('ActionOverlay - Calling onSave with data:', newScreenshot);
     onSave(newScreenshot);
   };
 
