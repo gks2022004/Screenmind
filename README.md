@@ -1,20 +1,14 @@
 <div align="center">
 
-<svg width="120" height="120" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect x="3" y="3" width="18" height="18" rx="2" stroke="#8b5cf6" stroke-width="2" />
-  <path d="M8 8H16V16H8V8Z" fill="#8b5cf6" opacity="0.5" />
-  <path d="M12 8V6" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" />
-  <path d="M16 12H18" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" />
-  <path d="M12 16V18" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" />
-  <path d="M8 12H6" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" />
-  <circle cx="12" cy="12" r="2" fill="#8b5cf6" />
-</svg>
+<img src="https://github.com/gks2022004/Screenmind/blob/main/public/favicon.svg" width="120" height="120" alt="ScreenMind Logo" />
 
 # ScreenMind
 
 **Your screenshots. Organized. Annotated. Unforgettable.**
 
 A neo-brutalist screenshot assistant that transforms chaos into clarity using AI-powered intelligence.
+
+[Live Demo](https://ai.studio/apps/drive/1JbS1EuPDbpXmD2o5mpMomzz1MpCgNUE8) • [Documentation](#features) • [Getting Started](#quick-start)
 
 </div>
 
