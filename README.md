@@ -16,8 +16,6 @@
 
 A neo-brutalist screenshot assistant that transforms chaos into clarity using AI-powered intelligence.
 
-[Live Demo](https://ai.studio/apps/drive/1JbS1EuPDbpXmD2o5mpMomzz1MpCgNUE8) • [Documentation](#features) • [Getting Started](#quick-start)
-
 </div>
 
 ---
