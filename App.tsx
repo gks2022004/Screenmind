@@ -224,20 +224,20 @@ const App: React.FC = () => {
       />
 
       {/* Neo-Brutalist Header */}
-      <header className="sticky top-0 z-30 bg-white dark:bg-gray-900 border-b-2 border-black dark:border-white px-5 py-4 flex justify-between items-center">
-        <div className="flex items-center gap-3">
-           <div className="w-10 h-10 bg-black dark:bg-white text-white dark:text-black flex items-center justify-center border-2 border-transparent shadow-neo-sm">
-             <ScreenmindLogo className="w-6 h-6" />
+      <header className="sticky top-0 z-30 bg-white dark:bg-gray-900 border-b-2 border-black dark:border-white px-3 md:px-5 py-3 md:py-4 flex justify-between items-center">
+        <div className="flex items-center gap-2 md:gap-3">
+           <div className="w-8 h-8 md:w-10 md:h-10 bg-black dark:bg-white text-white dark:text-black flex items-center justify-center border-2 border-transparent shadow-neo-sm">
+             <ScreenmindLogo className="w-5 h-5 md:w-6 md:h-6" />
            </div>
            <div>
-             <h1 className="text-xl font-display font-black uppercase tracking-tighter leading-none dark:text-white">ScreenMind</h1>
-             <div className="h-1 bg-neo-primary w-full mt-0.5"></div>
+             <h1 className="text-lg md:text-xl font-display font-black uppercase tracking-tighter leading-none dark:text-white">ScreenMind</h1>
+             <div className="h-0.5 md:h-1 bg-neo-primary w-full mt-0.5"></div>
            </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 md:gap-2">
           <button 
             onClick={toggleClipboardMonitor}
-            className={`px-3 py-2 border-2 border-black dark:border-white font-bold text-xs uppercase transition-all ${
+            className={`px-2 md:px-3 py-1.5 md:py-2 border-2 border-black dark:border-white font-bold text-[10px] md:text-xs uppercase transition-all ${
               clipboardMonitorEnabled 
                 ? 'bg-neo-secondary text-white shadow-neo-sm' 
                 : 'bg-white dark:bg-gray-900 hover:shadow-neo dark:hover:shadow-neo-white'
@@ -248,15 +248,15 @@ const App: React.FC = () => {
           </button>
           <button 
             onClick={toggleTheme}
-            className="w-10 h-10 border-2 border-black dark:border-white bg-neo-yellow text-black hover:shadow-neo dark:hover:shadow-neo-white hover:-translate-y-0.5 hover:-translate-x-0.5 transition-all flex items-center justify-center"
+            className="w-8 h-8 md:w-10 md:h-10 border-2 border-black dark:border-white bg-neo-yellow text-black hover:shadow-neo dark:hover:shadow-neo-white hover:-translate-y-0.5 hover:-translate-x-0.5 transition-all flex items-center justify-center"
           >
-            {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            {isDarkMode ? <Sun className="w-4 h-4 md:w-5 md:h-5" /> : <Moon className="w-4 h-4 md:w-5 md:h-5" />}
           </button>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="p-5 max-w-xl mx-auto space-y-6">
+      <main className="p-3 md:p-5 max-w-xl mx-auto space-y-4 md:space-y-6">
         {screenshots.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-[50vh] text-center border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg mt-10">
             <div className="w-20 h-20 bg-white dark:bg-gray-800 border-2 border-black dark:border-white shadow-neo flex items-center justify-center mb-6 rotate-3">
@@ -293,14 +293,14 @@ const App: React.FC = () => {
       </main>
 
       {/* Brutalist FAB */}
-      <div className="fixed bottom-8 right-6 z-20 flex flex-col gap-3">
+      <div className="fixed bottom-4 md:bottom-8 right-3 md:right-6 z-20 flex flex-col gap-2 md:gap-3">
         {/* Camera/Screenshot button - visible on mobile */}
         <button 
           onClick={openCamera}
-          className="w-14 h-14 bg-neo-yellow text-black border-2 border-black dark:border-white shadow-neo dark:shadow-neo-white hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all flex items-center justify-center md:hidden"
+          className="w-12 h-12 md:w-14 md:h-14 bg-neo-yellow text-black border-2 border-black dark:border-white shadow-neo dark:shadow-neo-white hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all flex items-center justify-center md:hidden"
           title="Take/Upload Screenshot"
         >
-          <ImageIcon className="w-6 h-6" />
+          <ImageIcon className="w-5 h-5 md:w-6 md:h-6" />
         </button>
         {/* Paste button - visible on desktop */}
         <button 
@@ -312,9 +312,9 @@ const App: React.FC = () => {
         </button>
         <button 
           onClick={() => fileInputRef.current?.click()}
-          className="w-16 h-16 bg-neo-primary border-2 border-black shadow-neo hover:shadow-neo-lg hover:-translate-y-1 hover:-translate-x-1 transition-all active:translate-x-0 active:translate-y-0 active:shadow-none flex items-center justify-center text-white"
+          className="w-14 h-14 md:w-16 md:h-16 bg-neo-primary border-2 border-black shadow-neo hover:shadow-neo-lg hover:-translate-y-1 hover:-translate-x-1 transition-all active:translate-x-0 active:translate-y-0 active:shadow-none flex items-center justify-center text-white"
         >
-          <Plus className="w-8 h-8 stroke-[3]" />
+          <Plus className="w-7 h-7 md:w-8 md:h-8 stroke-[3]" />
         </button>
       </div>
 

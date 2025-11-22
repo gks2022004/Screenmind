@@ -77,10 +77,10 @@ const ScreenshotCard: React.FC<ScreenshotCardProps> = ({ item, onDelete, onClick
   return (
     <div 
       onClick={() => onClick(item)}
-      className="group relative bg-white dark:bg-gray-900 border-2 border-black dark:border-white shadow-neo dark:shadow-neo-white hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px] dark:hover:shadow-none transition-all duration-200 cursor-pointer mb-2 p-3 flex gap-4"
+      className="group relative bg-white dark:bg-gray-900 border-2 border-black dark:border-white shadow-neo dark:shadow-neo-white hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px] dark:hover:shadow-none transition-all duration-200 cursor-pointer mb-2 p-2 md:p-3 flex gap-2 md:gap-4"
     >
       {/* Thumbnail with bold border */}
-      <div className="w-24 h-24 shrink-0 border-2 border-black dark:border-white bg-gray-100 dark:bg-gray-800 overflow-hidden">
+      <div className="w-20 h-20 md:w-24 md:h-24 shrink-0 border-2 border-black dark:border-white bg-gray-100 dark:bg-gray-800 overflow-hidden">
         <img 
           src={item.imageData} 
           alt={item.title} 
@@ -90,7 +90,7 @@ const ScreenshotCard: React.FC<ScreenshotCardProps> = ({ item, onDelete, onClick
       </div>
 
       {/* Content */}
-      <div className="flex-1 min-w-0 flex flex-col justify-between h-24">
+      <div className="flex-1 min-w-0 flex flex-col justify-between h-20 md:h-24">
         <div>
           <div className="flex justify-between items-start mb-1">
             {isEditingTitle ? (
@@ -115,7 +115,7 @@ const ScreenshotCard: React.FC<ScreenshotCardProps> = ({ item, onDelete, onClick
               </div>
             ) : (
               <div className="flex items-center gap-1 flex-1 group/title">
-                <h3 className="font-display font-bold text-lg leading-tight truncate pr-2 text-black dark:text-white">
+                <h3 className="font-display font-bold text-base md:text-lg leading-tight truncate pr-1 md:pr-2 text-black dark:text-white">
                   {item.title || 'Untitled'}
                 </h3>
                 <button 
@@ -127,11 +127,11 @@ const ScreenshotCard: React.FC<ScreenshotCardProps> = ({ item, onDelete, onClick
                 </button>
               </div>
             )}
-            <span className="inline-block px-1.5 py-0.5 border border-black dark:border-white text-[10px] font-bold uppercase bg-neo-yellow text-black shrink-0">
+            <span className="inline-block px-1 md:px-1.5 py-0.5 border border-black dark:border-white text-[9px] md:text-[10px] font-bold uppercase bg-neo-yellow text-black shrink-0">
               {formattedDate}
             </span>
           </div>
-          <p className="text-xs text-gray-600 dark:text-gray-300 line-clamp-2 font-mono">
+          <p className="text-[10px] md:text-xs text-gray-600 dark:text-gray-300 line-clamp-2 font-mono">
             {item.summary || "No description provided."}
           </p>
         </div>
